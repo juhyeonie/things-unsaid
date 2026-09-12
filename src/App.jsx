@@ -8,6 +8,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 import Toast from './components/ui/Toast.jsx';
 import { useApp } from './context/AppContext.js';
 import { AppProvider } from './context/AppProvider.jsx';
@@ -87,14 +88,16 @@ export function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ToastProvider>
-        <AppProvider>
-          <ScrollToTop />
-          <AppRoutes />
-          <Toast />
-        </AppProvider>
-      </ToastProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ToastProvider>
+          <AppProvider>
+            <ScrollToTop />
+            <AppRoutes />
+            <Toast />
+          </AppProvider>
+        </ToastProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
