@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* Test files are source too, so Tailwind would scan their assertion strings
+   and emit utilities the app never uses. */
+@source not "./**/*.test.{js,jsx}";
+@source not "./test/**";
+
 /* ------------------------------------------------------------------ *
  * Things Unsaid — design tokens
  *

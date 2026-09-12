@@ -14,8 +14,15 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:5173. `npm run build` produces the production bundle and
-`npm run lint` runs oxlint.
+Then open http://localhost:5173.
+
+| Command | Does |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm test` | Runs the suite once |
+| `npm run test:watch` | Reruns on change |
+| `npm run lint` | oxlint |
+| `npm run build` | Production bundle |
 
 Stack for this phase: React 19, React Router and Tailwind CSS v4 on Vite. Nothing else.
 
@@ -50,6 +57,7 @@ src/
   utils/format.js          dates, word counts, salutations, share URLs
   utils/cx.js              conditional class joining
   hooks/useViewportWidth.js
+  test/setup.js            jsdom gaps the app touches on mount
   components/
     Cassette/              the tape itself: shell, J-card, reels, stickers
     layout/AppHeader.jsx   signed-in chrome and the back-chevron logo
@@ -93,6 +101,26 @@ Three things are worth knowing before editing the classes:
 
 Dynamic values that Tailwind cannot express — sticker positions, the chosen shell
 colour, the step-dot widths — stay as inline `style`.
+
+## Tests
+
+Vitest, with Testing Library for anything that renders. 69 tests in five files, about
+nine seconds.
+
+| File | Covers |
+| --- | --- |
+| `services/mockApi.test.js` | The contract the Express routes will have to honour — validation branches, share codes, and `buildTapeRecord` as both a POST and a PATCH body. Runs in the node environment, no DOM. |
+| `utils/format.test.js` | Dates, word counts, salutations, share URLs, and that the placeholder letter is preview-only. |
+| `context/AppProvider.test.jsx` | The state layer through `useApp`: signing in and out, storing, sending, deleting, the tracklist and the stickers. |
+| `pages/Recipient.test.jsx` | The share route end to end, including every way a link can fail to resolve. |
+| `pages/create/Create.test.jsx` | The wizard: stepping, the tracklist gate, and the send confirmation. |
+
+The point of the first one is that it should keep passing when the mock bodies become
+`fetch` calls. The rest lock in behaviour that was wrong once already — each of those
+tests carries a comment saying which regression it guards.
+
+Component tests drive the real router and the real providers rather than mocking them,
+so they exercise the same code paths as the browser.
 
 ## Where the backend plugs in
 

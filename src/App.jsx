@@ -44,7 +44,7 @@ function RecipientRoute() {
   return <Recipient key={code} />;
 }
 
-function AppRoutes() {
+export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
