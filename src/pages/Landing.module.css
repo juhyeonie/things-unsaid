@@ -1,0 +1,144 @@
+/* Declared per module: CSS Modules scopes animation names, so a module can
+   only reference keyframes it owns. */
+@keyframes tuRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  /* Wraps rather than overflowing once the logo and both actions
+     stop fitting on one line, as the signed-in header does. */
+  flex-wrap: wrap;
+  padding: 20px clamp(20px, 5vw, 56px);
+}
+
+.logo {
+  height: 46px;
+  width: auto;
+  display: block;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.main {
+  flex: 1;
+  display: grid;
+  /* min() keeps the two columns on desktop without overflowing a phone. */
+  grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr));
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  padding: clamp(24px, 4vw, 56px) clamp(20px, 5vw, 56px) 72px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 560px;
+  container-type: inline-size;
+}
+
+.kicker {
+  font-family: var(--tu-hand);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--tu-accent);
+}
+
+.heading {
+  font-size: clamp(42px, 13.4cqi, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+
+.lede {
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--tu-ink-soft);
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.ctaNote {
+  font-size: 14px;
+  color: var(--tu-ink-faint);
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  border-top: 1px solid var(--tu-line);
+  padding-top: 24px;
+  margin-top: 8px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  flex: 1;
+}
+
+.stepNo {
+  font-size: 11px;
+  font-family: var(--tu-mono);
+  color: var(--tu-accent);
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.stepBody {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--tu-ink-soft);
+}
+
+.stage {
+  display: grid;
+  place-items: center;
+  padding: clamp(8px, 3vw, 32px);
+}
+
+.tape {
+  width: 100%;
+  max-width: 480px;
+  transform: rotate(-3deg);
+  animation: tuRise 700ms var(--tu-ease-soft) both;
+}

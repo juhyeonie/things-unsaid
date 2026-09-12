@@ -1,0 +1,70 @@
+/* Declared per module: CSS Modules scopes animation names, so a module can
+   only reference keyframes it owns. */
+@keyframes tuFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tuRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(36, 31, 27, 0.42);
+  backdrop-filter: blur(3px);
+  animation: tuFade 200ms ease both;
+}
+
+.panel {
+  width: 100%;
+  max-width: 420px;
+  background: var(--tu-card);
+  border: 1px solid var(--tu-line-strong);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--tu-shadow-modal);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: tuRise 260ms var(--tu-ease-out) both;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--tu-ink-soft);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* The modal's cancel button sits on paper rather than card white. */
+.cancel {
+  background: var(--tu-paper);
+}

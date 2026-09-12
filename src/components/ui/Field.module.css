@@ -1,0 +1,81 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tu-ink-soft);
+  font-weight: 500;
+}
+
+.input {
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--tu-ink);
+  padding: 14px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--tu-line-strong);
+  background: var(--tu-card);
+  transition: border-color 160ms ease;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--tu-ink-faint);
+  opacity: 0.85;
+}
+
+.input:focus {
+  border-color: var(--tu-accent);
+  outline: none;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--tu-accent);
+  outline-offset: 3px;
+}
+
+.invalid {
+  border-color: var(--tu-accent);
+}
+
+/* Auth fields sit a little taller than the wizard's. */
+.tall {
+  min-height: 50px;
+}
+
+/* The J-card label is typed in the same hand it will be printed in. */
+.hand {
+  font-family: var(--tu-hand);
+  font-size: 26px;
+  padding: 12px 15px;
+}
+
+/* Pasted track links read as code. */
+.mono {
+  font-family: var(--tu-mono);
+  font-size: 14px;
+  padding: 15px;
+  min-height: 48px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--tu-ink-faint);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--tu-accent);
+}
+
+.errorTight {
+  gap: 6px;
+}

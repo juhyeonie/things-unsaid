@@ -1,0 +1,169 @@
+/* ------------------------------------------------------------------ *
+ * Things Unsaid — design tokens + global baseline
+ * Values mirror the Claude Design prototype exactly.
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* Surfaces */
+  --tu-paper: #faf7f2;
+  --tu-card: #fffdf7;
+  --tu-muted: #f2ede4;
+
+  /* Ink */
+  --tu-ink: #241f1b;
+  --tu-ink-soft: #6b6157;
+  --tu-ink-faint: #7a6f63;
+  --tu-ink-deep: #2a2622;
+
+  /* Lines */
+  --tu-line: #e9e2d6;
+  --tu-line-strong: #d8cfc0;
+  --tu-line-paper: #e3d9c8;
+  --tu-rule: #efe4d2;
+  --tu-line-hover: #c0b6a8;
+
+  /* Accent */
+  --tu-accent: #c8443e;
+  --tu-accent-hover: #b23a35;
+  --tu-accent-active: #9e322d;
+
+  /* Status */
+  --tu-sage: #a9bfa0;
+  --tu-sage-deep: #6e8c5a;
+  --tu-sage-bg: #eaf0e6;
+  --tu-sage-ink: #3c5230;
+
+  /* Type */
+  --tu-font: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --tu-hand: 'Reenie Beanie', cursive;
+  --tu-mono: ui-monospace, Menlo, monospace;
+
+  /* Elevation */
+  --tu-shadow-button: 0 1px 2px rgba(36, 31, 27, 0.1);
+  --tu-shadow-card: 0 10px 22px -16px rgba(36, 31, 27, 0.5);
+  --tu-shadow-letter: 0 14px 30px -18px rgba(36, 31, 27, 0.5);
+  --tu-shadow-modal: 0 28px 56px -24px rgba(36, 31, 27, 0.6);
+
+  /* Motion */
+  --tu-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --tu-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--tu-paper);
+}
+
+body {
+  font-family: var(--tu-font);
+  color: var(--tu-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--tu-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200, 68, 62, 0.35);
+}
+
+a:hover {
+  color: var(--tu-accent-active);
+  border-bottom-color: var(--tu-accent-active);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--tu-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ---------------------------------------------------------------- *
+ * Animations used across screens
+ * ---------------------------------------------------------------- */
+
+@keyframes tuRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tuFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tuToast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes tuSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Shared entrance helpers */
+.tu-rise {
+  animation: tuRise 280ms var(--tu-ease-out) both;
+}
+
+.tu-fade {
+  animation: tuFade 500ms ease both;
+}
+
+/* Visually hidden, still read by assistive tech */
+.tu-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

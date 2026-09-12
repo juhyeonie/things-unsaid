@@ -1,0 +1,76 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  background: var(--tu-card);
+  border: 1px solid var(--tu-line-strong);
+  border-radius: 16px;
+  transition:
+    transform 180ms var(--tu-ease-out),
+    box-shadow 180ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tu-shadow-card);
+}
+
+.stage {
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--tu-muted);
+}
+
+/* Expired tapes sit back a little. */
+.faded {
+  opacity: 0.45;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--tu-hand);
+  font-size: 26px;
+  line-height: 1.25;
+  color: var(--tu-ink);
+  overflow-wrap: anywhere;
+}
+
+.for {
+  font-size: 14px;
+  color: var(--tu-ink-soft);
+}
+
+.dates {
+  font-size: 12px;
+  font-family: var(--tu-mono);
+  color: var(--tu-ink-faint);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 0 4px 4px;
+}
+
+.action {
+  padding: 11px 15px;
+}
+
+.actionGhost {
+  padding: 11px 13px;
+}

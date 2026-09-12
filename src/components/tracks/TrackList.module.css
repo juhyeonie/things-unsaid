@@ -1,0 +1,133 @@
+/* Panel that holds the tracklist in the wizard and on the last look. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: var(--tu-card);
+  border: 1px solid var(--tu-line-strong);
+  border-radius: 16px;
+}
+
+/* The recipient reads a bare list with rules between songs. */
+.plain {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 160ms ease;
+}
+
+.editable:hover {
+  background: var(--tu-paper);
+}
+
+.readerRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 8px;
+  border-bottom: 1px solid #efe8dc;
+}
+
+.no {
+  font-size: 12px;
+  font-family: var(--tu-mono);
+  color: var(--tu-ink-faint);
+  width: 22px;
+  flex: none;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 150px;
+}
+
+.metaTight {
+  flex: 1;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.titleCompact {
+  font-size: 15px;
+}
+
+.titleReader {
+  font-size: 17px;
+}
+
+.artist {
+  font-size: 13px;
+  color: var(--tu-ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.artistReader {
+  font-size: 14px;
+}
+
+.len {
+  font-size: 13px;
+  font-family: var(--tu-mono);
+  color: var(--tu-ink-faint);
+}
+
+.controls {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+
+/* Reordering controls are quiet until hovered. */
+.control:hover:not(:disabled) {
+  background: var(--tu-muted);
+  color: var(--tu-ink);
+}
+
+.remove:hover:not(:disabled) {
+  background: var(--tu-muted);
+  color: var(--tu-accent);
+}
+
+/* Empty side A. */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 24px;
+  border: 1px dashed var(--tu-line-strong);
+  border-radius: 16px;
+  background: var(--tu-card);
+}
+
+.emptyTitle {
+  font-family: var(--tu-hand);
+  font-size: 30px;
+  color: var(--tu-ink-faint);
+}
+
+.emptyBody {
+  font-size: 14px;
+  color: var(--tu-ink-soft);
+  text-align: center;
+}

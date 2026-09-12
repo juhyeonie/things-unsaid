@@ -1,0 +1,116 @@
+/* Declared per module: CSS Modules scopes animation names, so a module can
+   only reference keyframes it owns. */
+@keyframes tuRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * The letter, on ruled paper. The ruling is a repeating gradient whose
+ * pitch matches the line-height of the text sitting on it.
+ * ------------------------------------------------------------------ */
+
+.sheet {
+  border-radius: 8px;
+  background: var(--tu-card);
+  border: 1px solid var(--tu-line-paper);
+}
+
+.editor {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 36px) clamp(18px, 4vw, 40px);
+  box-shadow: var(--tu-shadow-letter);
+}
+
+.preview {
+  padding: 26px 24px;
+  box-shadow: var(--tu-shadow-letter);
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 31px,
+    var(--tu-rule) 31px 32px
+  );
+}
+
+.reader {
+  width: 100%;
+  padding: clamp(24px, 5vw, 44px) clamp(20px, 5vw, 44px);
+  box-shadow: 0 20px 44px -22px rgba(36, 31, 27, 0.55);
+  animation: tuRise 600ms var(--tu-ease-soft) both;
+}
+
+.salutation {
+  display: block;
+  font-family: var(--tu-hand);
+  color: var(--tu-ink-faint);
+}
+
+.salutationEditor {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.salutationReader {
+  font-size: clamp(26px, 5vw, 32px);
+  margin-bottom: 8px;
+}
+
+.textarea {
+  width: 100%;
+  display: block;
+  font-family: var(--tu-hand);
+  font-size: 27px;
+  line-height: 36px;
+  color: var(--tu-ink);
+  padding: 0;
+  border: none;
+  background: transparent;
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 35px,
+    var(--tu-rule) 35px 36px
+  );
+  resize: vertical;
+  outline: none;
+}
+
+.textarea::placeholder {
+  color: var(--tu-ink-faint);
+}
+
+.count {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: var(--tu-ink-faint);
+  margin-top: 10px;
+}
+
+.previewText {
+  font-family: var(--tu-hand);
+  font-size: 25px;
+  line-height: 32px;
+  color: var(--tu-ink);
+  white-space: pre-wrap;
+}
+
+.readerText {
+  font-family: var(--tu-hand);
+  font-size: clamp(24px, 4.6vw, 29px);
+  line-height: 38px;
+  color: var(--tu-ink);
+  white-space: pre-wrap;
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 37px,
+    var(--tu-rule) 37px 38px
+  );
+}

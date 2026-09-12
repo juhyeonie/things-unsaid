@@ -1,0 +1,136 @@
+/* Declared per module: CSS Modules scopes animation names, so a module can
+   only reference keyframes it owns. */
+@keyframes tuRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes tuFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(40px, 7vw, 88px);
+  padding: clamp(32px, 6vw, 72px) clamp(20px, 5vw, 40px) clamp(64px, 10vw, 140px);
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  animation: tuRise 600ms var(--tu-ease-soft) both;
+}
+
+.kicker {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tu-ink-faint);
+  font-weight: 500;
+}
+
+.forLine {
+  font-family: var(--tu-hand);
+  font-size: clamp(40px, 9vw, 64px);
+  line-height: 1;
+  color: var(--tu-ink);
+}
+
+.tape {
+  width: 100%;
+  max-width: 520px;
+  animation: tuRise 700ms var(--tu-ease-soft) 120ms both;
+}
+
+.openBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.openBtn {
+  font-size: 17px;
+  padding: 18px 38px;
+  min-height: 54px;
+}
+
+.openNote {
+  font-size: 13px;
+  color: var(--tu-ink-faint);
+}
+
+.songs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: tuRise 600ms var(--tu-ease-soft) both;
+}
+
+.sideRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sideLabel {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tu-ink-faint);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.divider {
+  flex: 1;
+  height: 1px;
+  background: var(--tu-line);
+}
+
+/* The nudge that there is more below the tracklist. */
+.letterHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 8px 16px;
+  color: var(--tu-ink-soft);
+  animation: tuFade 500ms ease both;
+}
+
+.letterHintText {
+  font-family: var(--tu-hand);
+  font-size: 30px;
+  color: var(--tu-accent);
+}
+
+.cta {
+  font-size: 15px;
+  padding: 15px 26px;
+  min-height: 50px;
+}
