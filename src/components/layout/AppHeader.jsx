@@ -1,9 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 
 import { useApp } from '../../context/AppContext.js';
+import { cx } from '../../utils/cx.js';
 import Button from '../ui/Button.jsx';
 import { ChevronLeftIcon } from '../ui/Icons.jsx';
-import styles from './AppHeader.module.css';
+
+const HEADER = cx(
+  'flex items-center gap-3.5 flex-wrap justify-between',
+  'px-[clamp(16px,4vw,40px)] py-3 border-b border-line bg-paper',
+);
+
+const NAV_ITEM = 'text-[14px] px-[14px] py-[11px] min-h-[44px] rounded-[10px]';
 
 /** Signed-in chrome: logo, section nav, the user's name and a way out. */
 export function AppHeader({ current }) {
@@ -20,30 +27,21 @@ export function AppHeader({ current }) {
   const handleSignOut = () => signOut();
 
   return (
-    <header className={styles.header}>
-      <div className={styles.left}>
-        <img src="/logo.png" alt="Things Unsaid" className={styles.logo} />
-        <nav className={styles.nav}>
+    <header className={HEADER}>
+      <div className="flex items-center gap-5 flex-wrap">
+        <img src="/logo.png" alt="Things Unsaid" className="h-9 w-auto block" />
+        <nav className="flex items-center gap-0.5">
           <Button
-            variant="ghost"
-            size="xs"
-            className={[
-              styles.navItem,
-              current === 'dashboard' && styles.navActive,
-            ]
-              .filter(Boolean)
-              .join(' ')}
+            variant={current === 'dashboard' ? 'soft' : 'ghost'}
+            className={NAV_ITEM}
             aria-current={current === 'dashboard' ? 'page' : undefined}
             onClick={() => navigate('/dashboard')}
           >
             My mixtapes
           </Button>
           <Button
-            variant="ghost"
-            size="xs"
-            className={[styles.navItem, current === 'create' && styles.navActive]
-              .filter(Boolean)
-              .join(' ')}
+            variant={current === 'create' ? 'soft' : 'ghost'}
+            className={NAV_ITEM}
             aria-current={current === 'create' ? 'page' : undefined}
             onClick={goCreate}
           >
@@ -52,14 +50,9 @@ export function AppHeader({ current }) {
         </nav>
       </div>
 
-      <div className={styles.right}>
-        <span className={styles.user}>{user?.name}</span>
-        <Button
-          variant="ghost"
-          size="xs"
-          className={styles.navItem}
-          onClick={handleSignOut}
-        >
+      <div className="flex items-center gap-1.5">
+        <span className="text-[13px] text-ink-soft whitespace-nowrap">{user?.name}</span>
+        <Button variant="ghost" className={NAV_ITEM} onClick={handleSignOut}>
           Log out
         </Button>
       </div>
@@ -74,12 +67,14 @@ export function BackLogo({ onClick, selfStart = false }) {
       type="button"
       onClick={onClick}
       aria-label="Back to start"
-      className={[styles.backLink, selfStart && styles.backStart]
-        .filter(Boolean)
-        .join(' ')}
+      className={cx(
+        'flex items-center gap-2.5 font-sans bg-none border-none cursor-pointer',
+        'whitespace-nowrap px-1 py-2 text-ink',
+        selfStart && 'self-start',
+      )}
     >
       <ChevronLeftIcon size={16} />
-      <img src="/logo.png" alt="Things Unsaid" className={styles.backLogo} />
+      <img src="/logo.png" alt="Things Unsaid" className="h-9 w-auto block" />
     </button>
   );
 }

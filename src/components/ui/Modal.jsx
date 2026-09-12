@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 
 import Button from './Button.jsx';
-import styles from './Modal.module.css';
 
 /**
  * Confirmation dialog. Closes on Escape or a backdrop click, and moves
@@ -38,28 +37,29 @@ export default function Modal({
       role="dialog"
       aria-modal="true"
       aria-label={label}
-      className={styles.backdrop}
+      className="fixed inset-0 z-[60] grid place-items-center p-6 bg-[rgba(36,31,27,0.42)] backdrop-blur-[3px] animate-fade-quick"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onCancel?.();
       }}
     >
-      <div className={styles.panel} ref={panel} tabIndex={-1}>
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.body}>{body}</p>
-        <div className={styles.actions}>
+      <div
+        className="w-full max-w-[420px] bg-card border border-line-strong rounded-2xl p-7 shadow-modal flex flex-col gap-4 animate-rise-panel"
+        ref={panel}
+        tabIndex={-1}
+      >
+        <h3 className="text-[22px] font-semibold tracking-[-0.015em]">{title}</h3>
+        <p className="text-[15px] leading-[1.6] text-ink-soft">{body}</p>
+        <div className="flex gap-2.5 justify-end flex-wrap">
           <Button
-            variant="secondary"
-            size="xs"
-            className={styles.cancel}
-            style={{ fontSize: 15, padding: '13px 20px', minHeight: 46 }}
+            variant="paper"
+            className="text-[15px] px-5 py-[13px] min-h-[46px] rounded-[10px]"
             onClick={onCancel}
           >
             {cancelLabel}
           </Button>
           <Button
             variant="primary"
-            size="xs"
-            style={{ fontSize: 15, padding: '13px 22px', minHeight: 46 }}
+            className="text-[15px] px-[22px] py-[13px] min-h-[46px] rounded-[10px]"
             onClick={onConfirm}
           >
             {confirmLabel}

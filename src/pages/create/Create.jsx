@@ -9,8 +9,8 @@ import Modal from '../../components/ui/Modal.jsx';
 import { useApp } from '../../context/AppContext.js';
 import { useToast } from '../../context/ToastContext.js';
 import { useViewportWidth } from '../../hooks/useViewportWidth.js';
+import { cx } from '../../utils/cx.js';
 import { letterTextFor } from '../../utils/format.js';
-import styles from './Create.module.css';
 import LetterStep from './steps/LetterStep.jsx';
 import PreviewStep from './steps/PreviewStep.jsx';
 import ShellStep from './steps/ShellStep.jsx';
@@ -18,6 +18,19 @@ import SongsStep from './steps/SongsStep.jsx';
 import StickerStep from './steps/StickerStep.jsx';
 
 const LAST_STEP = 4;
+
+/* The step indicator drops below the logo rather than overflowing on phones. */
+const HEADER = cx(
+  'sticky top-0 z-20 flex items-center justify-between gap-4 flex-wrap',
+  'px-[clamp(16px,4vw,40px)] py-3.5 bg-[rgba(250,247,242,0.92)] backdrop-blur-[10px]',
+  'border-b border-line',
+);
+
+const FOOTER = cx(
+  'sticky bottom-0 z-20 flex items-center justify-between gap-3',
+  'px-[clamp(16px,4vw,40px)] pt-3 pb-[max(12px,env(safe-area-inset-bottom))]',
+  'bg-[rgba(250,247,242,0.94)] backdrop-blur-[10px] border-t border-line',
+);
 
 /** How wide the cassette sits at each step. */
 function stageWidth(step, isNarrow) {
@@ -123,37 +136,36 @@ export default function Create() {
     step === LAST_STEP ? 'Create mixtape' : step === 3 ? 'See it whole' : 'Continue';
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
+    <div className="flex flex-col min-h-screen">
+      <header className={HEADER}>
         <BackLogo onClick={() => navigate(user ? '/dashboard' : '/')} />
 
-        <div className={styles.headerRight}>
+        <div className="flex items-center flex-wrap justify-end gap-3">
           {user && (
             <Button
               variant="secondary"
-              size="xs"
-              style={{ padding: '11px 14px' }}
+              className="text-[14px] px-[14px] py-[11px] min-h-[44px] rounded-[10px]"
               onClick={saveDraft}
             >
               Save draft
             </Button>
           )}
-          <span className={styles.stepLabel}>
+          <span className="text-[12px] tracking-[0.1em] uppercase text-ink-soft font-medium whitespace-nowrap">
             Step {Math.min(step + 1, 4)} of 4
           </span>
-          <div className={styles.dots} role="presentation">
+          <div className="flex items-center gap-1.5" role="presentation">
             {[0, 1, 2, 3].map((i) => (
               <span
                 key={i}
-                className={styles.dot}
+                className="h-2 rounded-[4px] [transition:width_240ms_var(--ease-out-soft),background_240ms_ease]"
                 style={{
                   width: i === step ? 22 : 8,
                   background:
                     i < step
-                      ? 'var(--tu-ink)'
+                      ? 'var(--color-ink)'
                       : i === step
-                        ? 'var(--tu-accent)'
-                        : 'var(--tu-line-strong)',
+                        ? 'var(--color-accent)'
+                        : 'var(--color-line-strong)',
                 }}
               />
             ))}
@@ -161,10 +173,10 @@ export default function Create() {
         </div>
       </header>
 
-      <main className={styles.main}>
-        <div className={styles.stage}>
+      <main className="flex-1 w-full max-w-[1180px] mx-auto px-[clamp(16px,4vw,40px)] pt-[clamp(24px,4vw,48px)] pb-10 flex flex-col gap-[clamp(28px,4vw,48px)]">
+        <div className="grid place-items-center">
           <div
-            className={styles.stageInner}
+            className="w-full transition-[max-width] duration-[320ms] ease-out-soft"
             style={{ maxWidth: stageWidth(step, isNarrow) }}
           >
             <Cassette
@@ -224,15 +236,22 @@ export default function Create() {
         )}
       </main>
 
-      <footer className={styles.footer}>
-        <Button variant="ghost" size="md" className={styles.backBtn} onClick={back}>
+      <footer className={FOOTER}>
+        <Button
+          variant="ghost"
+          className="text-[15px] px-[18px] py-3.5 min-h-[48px] rounded-[10px] gap-2"
+          onClick={back}
+        >
           <ChevronLeftIcon />
           Back
         </Button>
         <Button
           variant="primary"
-          size="md"
-          className={`${styles.nextBtn} ${canNext ? '' : styles.nextBlocked}`}
+          className={cx(
+            'text-[16px] px-[26px] py-3.5 min-h-[48px] rounded-[10px] gap-2',
+            /* A blocked Next still reacts to clicks so it can explain itself. */
+            !canNext && 'opacity-40 cursor-not-allowed',
+          )}
           onClick={next}
         >
           {nextLabel}

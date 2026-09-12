@@ -1,8 +1,17 @@
 import { fmt } from '../../utils/format.js';
+import { cx } from '../../utils/cx.js';
 import Cassette from '../Cassette/Cassette.jsx';
 import Button from '../ui/Button.jsx';
 import StatusPill from '../ui/StatusPill.jsx';
-import styles from './TapeCard.module.css';
+
+const CARD = cx(
+  'flex flex-col gap-3.5 p-3.5 bg-card border border-line-strong rounded-2xl',
+  '[transition:translate_180ms_var(--ease-out-soft),box-shadow_180ms_ease]',
+  'hover:-translate-y-0.5 hover:shadow-card',
+);
+
+const ACTION = 'text-[14px] px-[15px] py-[11px] min-h-[44px] rounded-[10px]';
+const ACTION_GHOST = 'text-[14px] px-[13px] py-[11px] min-h-[44px] rounded-[10px]';
 
 /** "made Sep 10 · fades Sep 24", phrased for the tape's status. */
 function datesFor(tape) {
@@ -75,33 +84,36 @@ export default function TapeCard({ tape, ...handlers }) {
   const actions = actionsFor(tape, handlers);
 
   return (
-    <article className={styles.card}>
+    <article className={CARD}>
       <div
-        className={[styles.stage, tape.status === 'Expired' && styles.faded]
-          .filter(Boolean)
-          .join(' ')}
+        className={cx(
+          'p-3.5 rounded-[10px] bg-muted',
+          /* Expired tapes sit back a little. */
+          tape.status === 'Expired' && 'opacity-45',
+        )}
       >
         <Cassette shell={tape.shell} label={tape.title} stickers={tape.stickers} />
       </div>
 
-      <div className={styles.meta}>
-        <div className={styles.row}>
-          <span className={styles.title}>{tape.title}</span>
+      <div className="flex flex-col gap-2 px-1">
+        <div className="flex items-center gap-2 justify-between">
+          <span className="font-hand text-[26px] leading-[1.25] text-ink [overflow-wrap:anywhere]">
+            {tape.title}
+          </span>
           <StatusPill status={tape.status} />
         </div>
-        <span className={styles.for}>
+        <span className="text-[14px] text-ink-soft">
           {tape.recipient ? `for ${tape.recipient}` : 'no recipient yet'}
         </span>
-        <span className={styles.dates}>{datesFor(tape)}</span>
+        <span className="text-[12px] font-mono text-ink-faint">{datesFor(tape)}</span>
       </div>
 
-      <div className={styles.actions}>
+      <div className="flex gap-2 flex-wrap px-1 pb-1">
         {actions.map((a) => (
           <Button
             key={a.label}
             variant={a.variant}
-            size="xs"
-            className={a.variant === 'ghost' ? styles.actionGhost : styles.action}
+            className={a.variant === 'ghost' ? ACTION_GHOST : ACTION}
             aria-label={a.aria}
             onClick={a.onDo}
           >
