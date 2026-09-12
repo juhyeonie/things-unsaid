@@ -28,7 +28,7 @@ Stack for this phase: React 19, React Router and Tailwind CSS v4 on Vite. Nothin
 | `/dashboard` | Your mixtapes, filtered by Draft / Active / Expired |
 | `/create` | The five-step wizard: shell → stickers → songs → letter → last look |
 | `/done` | The share link, right after a tape becomes real |
-| `/m/:code` | What the recipient opens. `/m/demo` shows the tape in the editor |
+| `/m/:code` | What the recipient opens; an unresolvable code redirects to `/expired`. `/m/demo` shows the tape in the editor |
 | `/expired` | A link that has passed its fourteen days |
 
 Account screens are guarded by `RequireAccount` in `src/App.jsx`; without a session
@@ -110,6 +110,11 @@ changes:
 State lives in `AppProvider` for the page session only — reloading signs you out and
 clears your tapes. Persistence is the backend's job.
 
+Because of that, `/m/:code` currently sends every cold-loaded link to the faded-away
+screen: with no store to read from, the tape genuinely cannot be resolved. That is the
+honest answer until `GET /api/tapes/:code` exists, and it is where the loading and
+not-found branches belong once it does.
+
 ### Mocked on purpose
 
 - **Accounts.** Any valid-looking email with an 8+ character password signs in.
@@ -118,7 +123,7 @@ clears your tapes. Persistence is the backend's job.
   `src/data/catalog.js` after a short delay.
 - **Share links.** Codes are generated in the browser and the fourteen-day expiry is
   displayed but never enforced.
-- **Playback.** The play buttons on a recipient's side A are inert.
+- **Playback.** The play buttons on a recipient's side A raise a toast saying so.
 - **Forgot password.** Raises a toast saying as much.
 
 ## Deviations from the prototype

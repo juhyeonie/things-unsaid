@@ -99,11 +99,10 @@ export function AppProvider({ children }) {
   /** Saves the draft as a Draft or an Active tape. Returns the stored record. */
   const storeTape = useCallback(
     (status) => {
-      const record = api.buildTapeRecord(
-        draft,
-        status,
-        draft.editingId ? draft.activeCode : null,
-      );
+      const existing = draft.editingId
+        ? tapes.find((t) => t.id === draft.editingId) || null
+        : null;
+      const record = api.buildTapeRecord(draft, status, existing);
 
       setTapes((list) =>
         list.some((t) => t.id === record.id)
@@ -115,12 +114,16 @@ export function AppProvider({ children }) {
       flash(status === 'Active' ? 'Link generated.' : 'Draft saved.');
       return record;
     },
-    [draft, flash, patchDraft],
+    [draft, tapes, flash, patchDraft],
   );
 
   const deleteTape = useCallback(
     (id) => {
       setTapes((list) => list.filter((t) => t.id !== id));
+      /* Detach the editor if it was pointed at this tape, so a later save
+         starts a new one instead of resurrecting the deleted id. Whatever is
+         in the editor is left alone — it is still the user's work. */
+      setDraft((d) => (d.editingId === id ? { ...d, editingId: null, activeCode: null } : d));
       flash('Deleted.');
     },
     [flash],

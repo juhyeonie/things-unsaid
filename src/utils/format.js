@@ -21,9 +21,16 @@ export const forLineFor = (recipient) =>
 
 export const shareUrlFor = (code) => `thingsunsaid.app/m/${code || '……'}`;
 
-/** What an unwritten letter shows in previews, so the page is never blank. */
-export const FALLBACK_LETTER =
+/**
+ * Stand-in copy for the sender's own preview of an unwritten letter, so the
+ * last look is never blank.
+ *
+ * Preview only. The recipient must never be shown this: it would read as the
+ * sender's own words. `Recipient` hides the letter entirely when none was
+ * written, which is why this is not exported.
+ */
+const PLACEHOLDER_LETTER =
   "I've started this six times. Here is the version I'm actually sending.\n\nTrack four is the one. You'll know why.";
 
-export const letterTextFor = (letter) =>
-  letter.trim().length ? letter : FALLBACK_LETTER;
+export const previewLetterText = (letter) =>
+  letter.trim().length ? letter : PLACEHOLDER_LETTER;
