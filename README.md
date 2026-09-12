@@ -17,6 +17,8 @@ npm run dev
 Then open http://localhost:5173. `npm run build` produces the production bundle and
 `npm run lint` runs oxlint.
 
+Stack for this phase: React 19, React Router and Tailwind CSS v4 on Vite. Nothing else.
+
 ## Screens
 
 | Route | Screen |
@@ -46,6 +48,7 @@ src/
   services/mockApi.js      ← the backend seam (see below)
   data/                    shells, stickers, track catalog, seeded tapes
   utils/format.js          dates, word counts, salutations, share URLs
+  utils/cx.js              conditional class joining
   hooks/useViewportWidth.js
   components/
     Cassette/              the tape itself: shell, J-card, reels, stickers
@@ -59,13 +62,37 @@ src/
     create/                the wizard and its five steps
 ```
 
-Styling is CSS Modules over the custom properties defined in `src/index.css`.
-Nothing is hard-coded twice: colours, fonts, shadows and easing all come from tokens.
+## Styling
 
-> Note: CSS Modules rewrites `animation-name`, so a module can only use keyframes it
-> declares itself. That is why `tuRise`, `tuFade`, `tuToast` and `tuSpin` appear at the
-> top of the module files that use them, alongside the global copies in `index.css`
-> that back the `.tu-rise` / `.tu-fade` utility classes.
+Tailwind CSS v4, wired up through `@tailwindcss/vite` — no `tailwind.config.js` and no
+PostCSS file. The prototype's palette, typefaces, easing curves, shadows and keyframes
+are declared once as tokens in the `@theme` block of `src/index.css`, which turns each
+one into a utility: `bg-paper`, `text-ink-soft`, `font-hand`, `ease-out-soft`,
+`shadow-letter`, `animate-reel`.
+
+Exact prototype values are kept with arbitrary utilities — `py-[17px]`,
+`min-h-[54px]`, `text-[clamp(42px,13.4cqi,76px)]` — rather than rounded to Tailwind's
+default scale, which would shift the design.
+
+Hand-written CSS survives in one place only: the `@layer base` block at the bottom of
+`index.css`, for the rules that cannot be utilities — the page background, the global
+`*:focus-visible` ring, the `prefers-reduced-motion` override and link defaults.
+
+Three things are worth knowing before editing the classes:
+
+- **One utility per property.** Tailwind resolves two utilities for the same property
+  by stylesheet order, not by their order in the class string. `Button` therefore owns
+  colour only; padding, type scale, radius and gap all come from the caller, and states
+  that swap palettes (the filter pills, the active nav item) are whole alternatives
+  rather than a base plus an override.
+- **Translate and rotate are their own CSS properties in v4,** not `transform`. A
+  transition must name `translate` for a hover lift to ease instead of jump.
+- **Class names must appear in the source as complete strings.** Tailwind scans text,
+  so a class assembled at runtime is never generated. The letter's three ruled-paper
+  gradients are written out in full in `components/letter/Letter.jsx` for that reason.
+
+Dynamic values that Tailwind cannot express — sticker positions, the chosen shell
+colour, the step-dot widths — stay as inline `style`.
 
 ## Where the backend plugs in
 

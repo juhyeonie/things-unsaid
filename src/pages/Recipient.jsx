@@ -8,7 +8,6 @@ import Button from '../components/ui/Button.jsx';
 import { ArrowDownIcon } from '../components/ui/Icons.jsx';
 import { useApp } from '../context/AppContext.js';
 import { forLineFor, letterTextFor, salutationFor } from '../utils/format.js';
-import styles from './Recipient.module.css';
 
 /** Codes that mean "show the tape currently in the editor". */
 const WORKING_CODES = ['demo', 'preview'];
@@ -45,13 +44,17 @@ export default function Recipient() {
   const letterText = letterTextFor(draft.letter);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.intro}>
-        <span className={styles.kicker}>Someone made you a tape</span>
-        <span className={styles.forLine}>{forLineFor(draft.recipient)}</span>
+    <div className="flex flex-col items-center gap-[clamp(40px,7vw,88px)] w-full max-w-[760px] mx-auto px-[clamp(20px,5vw,40px)] pt-[clamp(32px,6vw,72px)] pb-[clamp(64px,10vw,140px)]">
+      <div className="flex flex-col items-center gap-2.5 text-center animate-rise-slower">
+        <span className="text-[12px] tracking-[0.2em] uppercase text-ink-faint font-medium">
+          Someone made you a tape
+        </span>
+        <span className="font-hand text-[clamp(40px,9vw,64px)] leading-none text-ink">
+          {forLineFor(draft.recipient)}
+        </span>
       </div>
 
-      <div className={styles.tape}>
+      <div className="w-full max-w-[520px] animate-rise-hero-late">
         <Cassette
           shell={draft.shell}
           label={draft.title}
@@ -61,26 +64,26 @@ export default function Recipient() {
       </div>
 
       {!opened && (
-        <div className={styles.openBlock}>
+        <div className="flex flex-col items-center gap-3.5">
           <Button
             variant="dark"
-            size="xl"
-            soft
             lift
-            className={styles.openBtn}
+            className="text-[17px] px-[38px] py-[18px] min-h-[54px] rounded-xl"
             onClick={() => setOpened(true)}
           >
             Open the mixtape
           </Button>
-          <span className={styles.openNote}>Somewhere quiet is better.</span>
+          <span className="text-[13px] text-ink-faint">Somewhere quiet is better.</span>
         </div>
       )}
 
       {opened && (
-        <section className={styles.songs}>
-          <div className={styles.sideRow}>
-            <span className={styles.sideLabel}>Side A</span>
-            <span className={styles.divider} />
+        <section className="w-full flex flex-col gap-[18px] animate-rise-slower">
+          <div className="flex items-center gap-3">
+            <span className="text-[12px] tracking-[0.18em] uppercase text-ink-faint font-medium whitespace-nowrap">
+              Side A
+            </span>
+            <span className="flex-1 h-px bg-line" />
           </div>
           <TrackList tracks={draft.tracks} variant="reader" />
         </section>
@@ -89,24 +92,22 @@ export default function Recipient() {
       {opened && !letterOpen && (
         <button
           type="button"
-          className={styles.letterHint}
+          className="flex flex-col items-center gap-2.5 font-sans bg-none border-none cursor-pointer whitespace-nowrap px-4 py-2 text-ink-soft animate-fade"
           onClick={() => setLetterOpen(true)}
         >
           <ArrowDownIcon />
-          <span className={styles.letterHintText}>there&apos;s a letter too</span>
+          <span className="font-hand text-[30px] text-accent">
+            there&apos;s a letter too
+          </span>
         </button>
       )}
 
       {letterOpen && (
         <>
-          <LetterSheet
-            text={letterText}
-            salutation={salutationFor(draft.recipient)}
-          />
+          <LetterSheet text={letterText} salutation={salutationFor(draft.recipient)} />
           <Button
             variant="secondary"
-            size="md"
-            className={styles.cta}
+            className="text-[15px] px-[26px] py-[15px] min-h-[50px] rounded-[10px]"
             onClick={() => navigate(user ? '/dashboard' : '/')}
           >
             {user ? 'Back to my mixtapes' : 'Make one back'}

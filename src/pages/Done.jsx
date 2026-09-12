@@ -9,7 +9,9 @@ import { useApp } from '../context/AppContext.js';
 import { useToast } from '../context/ToastContext.js';
 import { canNativeShare, copyToClipboard, nativeShare } from '../services/mockApi.js';
 import { daysFrom, fmt, shareUrlFor } from '../utils/format.js';
-import styles from './Done.module.css';
+
+const BLOCK = 'w-full max-w-[460px] flex flex-col gap-2.5';
+const ALT_BTN = 'w-full text-[16px] px-[26px] py-4 min-h-[52px] rounded-xl';
 
 /** The screen right after a tape becomes real and gets its link. */
 export default function Done() {
@@ -42,38 +44,43 @@ export default function Done() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className="flex flex-col min-h-screen">
       <AppHeader />
 
-      <main className={styles.main}>
-        <div className={styles.intro}>
-          <span className={styles.kicker}>Your mixtape is ready</span>
-          <h1 className={styles.heading}>You made something worth saying.</h1>
+      <main className="flex-1 flex flex-col items-center gap-[clamp(28px,4vw,44px)] w-full max-w-[620px] mx-auto px-[clamp(20px,5vw,40px)] pt-[clamp(32px,6vw,64px)] pb-[90px]">
+        <div className="flex flex-col items-center gap-2.5 text-center animate-rise-slow">
+          <span className="text-[12px] tracking-[0.2em] uppercase text-ink-faint font-medium">
+            Your mixtape is ready
+          </span>
+          <h1 className="text-[clamp(34px,6vw,48px)] leading-[1.02] tracking-[-0.03em] font-semibold text-balance">
+            You made something worth saying.
+          </h1>
         </div>
 
-        <div className={styles.tape}>
+        <div className="w-full max-w-[440px] animate-rise-tape">
           <Cassette shell={draft.shell} label={draft.title} stickers={draft.placed} />
         </div>
 
-        <div className={styles.block}>
-          <span className={styles.blockLabel}>Their link</span>
-          <div className={styles.linkBox}>
+        <div className={BLOCK}>
+          <span className="text-[12px] tracking-[0.12em] uppercase text-ink-soft font-medium">
+            Their link
+          </span>
+          <div className="flex items-center gap-3 px-[18px] py-4 rounded-xl bg-card border border-line-strong shadow-link">
             <LinkIcon />
-            <span className={styles.url}>{url}</span>
+            <span className="font-mono text-[15px] text-ink overflow-hidden text-ellipsis whitespace-nowrap flex-1">
+              {url}
+            </span>
           </div>
-          <span className={styles.expiry}>
+          <span className="text-[13px] text-ink-faint">
             Anyone with this link can open it — no account needed. It fades on{' '}
             {fmt(daysFrom(14))}.
           </span>
         </div>
 
-        <div className={styles.block}>
+        <div className={BLOCK}>
           <Button
             variant="primary"
-            size="xl"
-            soft
-            block
-            className={styles.copyBtn}
+            className="w-full text-[17px] px-[26px] py-[17px] min-h-[54px] rounded-xl gap-2.5"
             onClick={copy}
           >
             <CopyIcon />
@@ -81,14 +88,7 @@ export default function Done() {
           </Button>
 
           {canNativeShare() && (
-            <Button
-              variant="secondary"
-              size="lg"
-              soft
-              block
-              className={styles.altBtn}
-              onClick={share}
-            >
+            <Button variant="secondary" className={`${ALT_BTN} gap-2.5`} onClick={share}>
               <ShareIcon />
               Share mixtape
             </Button>
@@ -96,10 +96,7 @@ export default function Done() {
 
           <Button
             variant="secondary"
-            size="lg"
-            soft
-            block
-            className={styles.altBtn}
+            className={ALT_BTN}
             onClick={() => navigate(`/m/${draft.activeCode || 'preview'}`)}
           >
             Open mixtape
@@ -107,10 +104,7 @@ export default function Done() {
 
           <Button
             variant="ghost"
-            size="md"
-            soft
-            block
-            className={styles.backBtn}
+            className="w-full text-[15px] px-[26px] py-[15px] min-h-[50px] rounded-xl"
             onClick={() => navigate('/dashboard')}
           >
             Back to my mixtapes

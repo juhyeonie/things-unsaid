@@ -1,169 +1,170 @@
+@import 'tailwindcss';
+
 /* ------------------------------------------------------------------ *
- * Things Unsaid — design tokens + global baseline
- * Values mirror the Claude Design prototype exactly.
+ * Things Unsaid — design tokens
+ *
+ * Every value is taken from the Claude Design prototype. Declaring them
+ * here turns each one into a utility: --color-paper gives bg-paper and
+ * text-paper, --font-hand gives font-hand, --animate-reel gives
+ * animate-reel, and so on.
  * ------------------------------------------------------------------ */
 
-:root {
+@theme {
   /* Surfaces */
-  --tu-paper: #faf7f2;
-  --tu-card: #fffdf7;
-  --tu-muted: #f2ede4;
+  --color-paper: #faf7f2;
+  --color-card: #fffdf7;
+  --color-muted: #f2ede4;
 
   /* Ink */
-  --tu-ink: #241f1b;
-  --tu-ink-soft: #6b6157;
-  --tu-ink-faint: #7a6f63;
-  --tu-ink-deep: #2a2622;
+  --color-ink: #241f1b;
+  --color-ink-soft: #6b6157;
+  --color-ink-faint: #7a6f63;
+  --color-ink-deep: #2a2622;
+  --color-ink-mute: #9c9186;
 
   /* Lines */
-  --tu-line: #e9e2d6;
-  --tu-line-strong: #d8cfc0;
-  --tu-line-paper: #e3d9c8;
-  --tu-rule: #efe4d2;
-  --tu-line-hover: #c0b6a8;
+  --color-line: #e9e2d6;
+  --color-line-strong: #d8cfc0;
+  --color-line-paper: #e3d9c8;
+  --color-line-hover: #c0b6a8;
+  --color-line-song: #efe8dc;
+  --color-rule: #efe4d2;
 
   /* Accent */
-  --tu-accent: #c8443e;
-  --tu-accent-hover: #b23a35;
-  --tu-accent-active: #9e322d;
+  --color-accent: #c8443e;
+  --color-accent-hover: #b23a35;
+  --color-accent-active: #9e322d;
 
   /* Status */
-  --tu-sage: #a9bfa0;
-  --tu-sage-deep: #6e8c5a;
-  --tu-sage-bg: #eaf0e6;
-  --tu-sage-ink: #3c5230;
+  --color-sage: #a9bfa0;
+  --color-sage-deep: #6e8c5a;
+  --color-sage-bg: #eaf0e6;
+  --color-sage-ink: #3c5230;
 
   /* Type */
-  --tu-font: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --tu-hand: 'Reenie Beanie', cursive;
-  --tu-mono: ui-monospace, Menlo, monospace;
+  --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-hand: 'Reenie Beanie', cursive;
+  --font-mono: ui-monospace, Menlo, monospace;
+
+  /* Easing */
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-soft: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Elevation */
-  --tu-shadow-button: 0 1px 2px rgba(36, 31, 27, 0.1);
-  --tu-shadow-card: 0 10px 22px -16px rgba(36, 31, 27, 0.5);
-  --tu-shadow-letter: 0 14px 30px -18px rgba(36, 31, 27, 0.5);
-  --tu-shadow-modal: 0 28px 56px -24px rgba(36, 31, 27, 0.6);
+  --shadow-button: 0 1px 2px rgba(36, 31, 27, 0.1);
+  --shadow-button-glow: 0 6px 16px -6px rgba(200, 68, 62, 0.5);
+  --shadow-lift: 0 10px 24px -10px rgba(36, 31, 27, 0.6);
+  --shadow-card: 0 10px 22px -16px rgba(36, 31, 27, 0.5);
+  --shadow-letter: 0 14px 30px -18px rgba(36, 31, 27, 0.5);
+  --shadow-letter-open: 0 20px 44px -22px rgba(36, 31, 27, 0.55);
+  --shadow-modal: 0 28px 56px -24px rgba(36, 31, 27, 0.6);
+  --shadow-toast: 0 14px 30px -14px rgba(36, 31, 27, 0.7);
+  --shadow-link: 0 1px 2px rgba(36, 31, 27, 0.06);
+  --shadow-tape:
+    0 18px 34px -16px rgba(36, 31, 27, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
 
-  /* Motion */
-  --tu-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --tu-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
-}
+  /* ---------------------------------------------------------------- *
+   * Motion. Declared once here, unlike the per-file copies CSS Modules
+   * forced, because a @theme keyframe is global.
+   * ---------------------------------------------------------------- */
 
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--tu-paper);
-}
-
-body {
-  font-family: var(--tu-font);
-  color: var(--tu-ink);
-  -webkit-font-smoothing: antialiased;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-a {
-  color: var(--tu-accent);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(200, 68, 62, 0.35);
-}
-
-a:hover {
-  color: var(--tu-accent-active);
-  border-bottom-color: var(--tu-accent-active);
-}
-
-*:focus-visible {
-  outline: 2px solid var(--tu-accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-
-button {
-  font-family: inherit;
-}
-
-/* ---------------------------------------------------------------- *
- * Animations used across screens
- * ---------------------------------------------------------------- */
-
-@keyframes tuRise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
-  to {
-    opacity: 1;
-    transform: none;
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
+
+  @keyframes toast {
+    from {
+      opacity: 0;
+      translate: -50% 12px;
+    }
+    to {
+      opacity: 1;
+      translate: -50% 0;
+    }
+  }
+
+  @keyframes reel {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* One token per timing the prototype actually uses. */
+  --animate-rise: rise 280ms var(--ease-out-soft) both;
+  --animate-rise-panel: rise 260ms var(--ease-out-soft) both;
+  --animate-rise-slow: rise 500ms var(--ease-in-soft) both;
+  --animate-rise-slower: rise 600ms var(--ease-in-soft) both;
+  --animate-rise-slower-late: rise 600ms var(--ease-in-soft) 120ms both;
+  --animate-rise-tape: rise 650ms var(--ease-in-soft) 100ms both;
+  --animate-rise-hero: rise 700ms var(--ease-in-soft) both;
+  --animate-rise-hero-late: rise 700ms var(--ease-in-soft) 120ms both;
+  --animate-fade-quick: fade 200ms ease both;
+  --animate-fade: fade 500ms ease both;
+  --animate-fade-slow: fade 700ms ease both;
+  --animate-toast: toast 240ms var(--ease-out-soft) both;
+  --animate-reel: reel 2.6s linear infinite;
 }
 
-@keyframes tuFade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+/* ------------------------------------------------------------------ *
+ * The handful of rules that are not utilities: page-level defaults and
+ * two global selectors that have to reach every element.
+ * ------------------------------------------------------------------ */
 
-@keyframes tuToast {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 12px);
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-paper);
   }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
   }
-}
 
-@keyframes tuSpin {
-  to {
-    transform: rotate(360deg);
+  #root {
+    min-height: 100vh;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200, 68, 62, 0.35);
   }
-}
 
-/* Shared entrance helpers */
-.tu-rise {
-  animation: tuRise 280ms var(--tu-ease-out) both;
-}
+  a:hover {
+    color: var(--color-accent-active);
+    border-bottom-color: var(--color-accent-active);
+  }
 
-.tu-fade {
-  animation: tuFade 500ms ease both;
-}
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 
-/* Visually hidden, still read by assistive tech */
-.tu-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
 }
