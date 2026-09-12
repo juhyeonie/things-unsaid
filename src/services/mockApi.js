@@ -60,13 +60,18 @@ export async function resolveTrack(link, catalogIndex) {
   return { ok: true, track: CATALOG[catalogIndex % CATALOG.length] };
 }
 
-/** Builds the record that will eventually be POSTed to /api/tapes. */
-export function buildTapeRecord(draft, status, existingCode) {
-  const code =
-    status === 'Active' ? existingCode || makeCode() : null;
+/**
+ * Builds the record that will eventually be POSTed to /api/tapes, or PATCHed
+ * to /api/tapes/:id when `existing` is the record being updated.
+ *
+ * `created` and the share code come from the existing record when there is
+ * one. A tape is created once; saving it again must not restamp either.
+ */
+export function buildTapeRecord(draft, status, existing = null) {
+  const code = status === 'Active' ? existing?.code || makeCode() : null;
 
   return {
-    id: draft.editingId || Date.now(),
+    id: existing?.id || draft.editingId || Date.now(),
     code,
     title: draft.title || 'untitled',
     recipient: draft.recipient.trim(),
@@ -75,7 +80,7 @@ export function buildTapeRecord(draft, status, existingCode) {
     tracks: draft.tracks.slice(),
     letter: draft.letter,
     status,
-    created: new Date(),
+    created: existing?.created || new Date(),
     expires: status === 'Active' ? daysFrom(14) : null,
   };
 }

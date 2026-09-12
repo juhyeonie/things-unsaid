@@ -10,7 +10,7 @@ import { useApp } from '../../context/AppContext.js';
 import { useToast } from '../../context/ToastContext.js';
 import { useViewportWidth } from '../../hooks/useViewportWidth.js';
 import { cx } from '../../utils/cx.js';
-import { letterTextFor } from '../../utils/format.js';
+import { previewLetterText } from '../../utils/format.js';
 import LetterStep from './steps/LetterStep.jsx';
 import PreviewStep from './steps/PreviewStep.jsx';
 import ShellStep from './steps/ShellStep.jsx';
@@ -231,7 +231,7 @@ export default function Create() {
           <PreviewStep
             tracks={draft.tracks}
             recipient={draft.recipient}
-            letterText={letterTextFor(draft.letter)}
+            letterText={previewLetterText(draft.letter)}
           />
         )}
       </main>

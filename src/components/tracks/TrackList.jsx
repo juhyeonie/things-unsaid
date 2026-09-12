@@ -21,7 +21,7 @@ const ICON_BTN = 'w-11 h-11 min-h-[44px] p-0 flex-none rounded-[10px]';
  *   compact  — the last look and the share screen, read only
  *   reader   — what the recipient sees, with a play control
  */
-function TrackRow({ track, index, variant, onMove, onRemove }) {
+function TrackRow({ track, index, variant, onMove, onRemove, onPlay }) {
   const isReader = variant === 'reader';
   const isCompact = variant === 'compact';
 
@@ -91,7 +91,12 @@ function TrackRow({ track, index, variant, onMove, onRemove }) {
       )}
 
       {isReader && (
-        <Button variant="secondary" className={ICON_BTN} aria-label={`Play ${track.title}`}>
+        <Button
+          variant="secondary"
+          className={ICON_BTN}
+          aria-label={`Play ${track.title}`}
+          onClick={() => onPlay?.(track)}
+        >
           <PlayIcon />
         </Button>
       )}
@@ -99,7 +104,7 @@ function TrackRow({ track, index, variant, onMove, onRemove }) {
   );
 }
 
-export default function TrackList({ tracks, variant = 'compact', onMove, onRemove }) {
+export default function TrackList({ tracks, variant = 'compact', onMove, onRemove, onPlay }) {
   const isReader = variant === 'reader';
 
   return (
@@ -112,6 +117,7 @@ export default function TrackList({ tracks, variant = 'compact', onMove, onRemov
           variant={variant}
           onMove={onMove}
           onRemove={onRemove}
+          onPlay={onPlay}
         />
       ))}
     </div>
