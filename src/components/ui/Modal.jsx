@@ -2,9 +2,12 @@ import { useEffect, useRef } from 'react';
 
 import Button from './Button.jsx';
 
+const FOCUSABLE =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 /**
- * Confirmation dialog. Closes on Escape or a backdrop click, and moves
- * focus into the panel so keyboard users land inside it.
+ * Confirmation dialog. Closes on Escape or a backdrop click, keeps Tab inside
+ * the panel while it is open, and hands focus back to whatever opened it.
  */
 export default function Modal({
   open,
@@ -21,13 +24,47 @@ export default function Modal({
   useEffect(() => {
     if (!open) return undefined;
 
-    const onKey = (e) => {
-      if (e.key === 'Escape') onCancel?.();
-    };
-    window.addEventListener('keydown', onKey);
+    const opener = document.activeElement;
     panel.current?.focus();
 
-    return () => window.removeEventListener('keydown', onKey);
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        onCancel?.();
+        return;
+      }
+      if (e.key !== 'Tab' || !panel.current) return;
+
+      const items = [...panel.current.querySelectorAll(FOCUSABLE)].filter(
+        (el) => !el.disabled,
+      );
+
+      /* Nothing to land on: hold focus on the panel itself. */
+      if (items.length === 0) {
+        e.preventDefault();
+        panel.current.focus();
+        return;
+      }
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey && (active === first || active === panel.current)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      /* Return the keyboard to where it was, if that element is still around. */
+      if (opener && document.contains(opener)) opener.focus?.();
+    };
   }, [open, onCancel]);
 
   if (!open) return null;

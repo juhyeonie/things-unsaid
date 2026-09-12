@@ -41,6 +41,11 @@ Stack for this phase: React 19, React Router and Tailwind CSS v4 on Vite. Nothin
 Account screens are guarded by `RequireAccount` in `src/App.jsx`; without a session
 it returns the visitor to the landing page.
 
+An `ErrorBoundary` wraps the whole app. A render error anywhere below it shows a
+recovery screen rather than a blank page, and the error message itself is printed only
+in development. It sits outside the router deliberately: recovery reloads rather than
+navigates, because whatever state produced the error is the state worth discarding.
+
 ## Layout
 
 ```
@@ -59,6 +64,7 @@ src/
   hooks/useViewportWidth.js
   test/setup.js            jsdom gaps the app touches on mount
   components/
+    ErrorBoundary.jsx      catches a render error and offers a way out
     Cassette/              the tape itself: shell, J-card, reels, stickers
     layout/AppHeader.jsx   signed-in chrome and the back-chevron logo
     letter/                the letter, on ruled paper
@@ -104,8 +110,8 @@ colour, the step-dot widths — stay as inline `style`.
 
 ## Tests
 
-Vitest, with Testing Library for anything that renders. 69 tests in five files, about
-nine seconds.
+Vitest, with Testing Library for anything that renders. 83 tests in seven files, about
+ten seconds.
 
 | File | Covers |
 | --- | --- |
@@ -114,6 +120,8 @@ nine seconds.
 | `context/AppProvider.test.jsx` | The state layer through `useApp`: signing in and out, storing, sending, deleting, the tracklist and the stickers. |
 | `pages/Recipient.test.jsx` | The share route end to end, including every way a link can fail to resolve. |
 | `pages/create/Create.test.jsx` | The wizard: stepping, the tracklist gate, and the send confirmation. |
+| `components/ErrorBoundary.test.jsx` | The fallback renders, reports, and reloads. |
+| `components/ui/Modal.test.jsx` | Dismissal, and that the keyboard cannot leave an open dialog. |
 
 The point of the first one is that it should keep passing when the mock bodies become
 `fetch` calls. The rest lock in behaviour that was wrong once already — each of those
