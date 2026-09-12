@@ -62,12 +62,14 @@ src/
   utils/format.js          dates, word counts, salutations, share URLs
   utils/cx.js              conditional class joining
   hooks/useViewportWidth.js
+  hooks/usePlayer.js       the simulated playback clock
   test/setup.js            jsdom gaps the app touches on mount
   components/
     ErrorBoundary.jsx      catches a render error and offers a way out
     Cassette/              the tape itself: shell, J-card, reels, stickers
     layout/AppHeader.jsx   signed-in chrome and the back-chevron logo
     letter/                the letter, on ruled paper
+    player/                the side A player and its tape-as-sleeve artwork
     tapes/TapeCard.jsx     one dashboard card
     tracks/TrackList.jsx   side A in its editable, compact and reader shapes
     ui/                    Button, Field, Modal, Toast, StatusPill, Icons
@@ -110,8 +112,8 @@ colour, the step-dot widths — stay as inline `style`.
 
 ## Tests
 
-Vitest, with Testing Library for anything that renders. 83 tests in seven files, about
-ten seconds.
+Vitest, with Testing Library for anything that renders. 105 tests in eight files, about
+eleven seconds.
 
 | File | Covers |
 | --- | --- |
@@ -120,6 +122,7 @@ ten seconds.
 | `context/AppProvider.test.jsx` | The state layer through `useApp`: signing in and out, storing, sending, deleting, the tracklist and the stickers. |
 | `pages/Recipient.test.jsx` | The share route end to end, including every way a link can fail to resolve. |
 | `pages/create/Create.test.jsx` | The wizard: stepping, the tracklist gate, and the send confirmation. |
+| `hooks/usePlayer.test.jsx` | The playback clock on fake timers: skipping, seeking, rolling on, stopping at the end. |
 | `components/ErrorBoundary.test.jsx` | The fallback renders, reports, and reloads. |
 | `components/ui/Modal.test.jsx` | Dismissal, and that the keyboard cannot leave an open dialog. |
 
@@ -129,6 +132,27 @@ tests carries a comment saying which regression it guards.
 
 Component tests drive the real router and the real providers rather than mocking them,
 so they exercise the same code paths as the browser.
+
+## The player
+
+Side A opens with a compact player above the tracklist: artwork, what is playing, a
+progress bar with elapsed and remaining, and previous / play / next. Choosing a song
+from the list loads it into the player, and the row for whatever is playing is tinted.
+
+Two things are worth knowing about it.
+
+**There is no audio.** Songs are links, and resolving one to something playable is
+backend work. So `hooks/usePlayer.js` simulates the clock: while playing, elapsed
+advances a second at a time and the tape rolls on when a track runs out. Everything the
+interface shows is real except the sound, and the player says so in as many words
+underneath, so a moving progress bar is not mistaken for music. When audio arrives the
+hook becomes a thin wrapper over an `<audio>` element — `elapsed` from `timeupdate`,
+`toggle` from play/pause, `seek` from `currentTime` — and the shape it returns should
+not need to change.
+
+**The artwork is the tape.** There is no per-song art without a music API, so the sleeve
+is the tape itself: its shell colour wearing its own stickers. Real artwork can replace
+`components/player/TapeArt.jsx` later without touching the player.
 
 ## Where the backend plugs in
 
@@ -159,7 +183,7 @@ not-found branches belong once it does.
   `src/data/catalog.js` after a short delay.
 - **Share links.** Codes are generated in the browser and the fourteen-day expiry is
   displayed but never enforced.
-- **Playback.** The play buttons on a recipient's side A raise a toast saying so.
+- **Playback.** The player's clock is simulated — see below.
 - **Forgot password.** Raises a toast saying as much.
 
 ## Deviations from the prototype

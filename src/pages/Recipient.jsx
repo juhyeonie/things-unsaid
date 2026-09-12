@@ -3,11 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Cassette from '../components/Cassette/Cassette.jsx';
 import { LetterSheet } from '../components/letter/Letter.jsx';
+import MusicPlayer from '../components/player/MusicPlayer.jsx';
 import TrackList from '../components/tracks/TrackList.jsx';
 import Button from '../components/ui/Button.jsx';
 import { ArrowDownIcon } from '../components/ui/Icons.jsx';
 import { useApp } from '../context/AppContext.js';
-import { useToast } from '../context/ToastContext.js';
+import { usePlayer } from '../hooks/usePlayer.js';
 import { forLineFor, salutationFor } from '../utils/format.js';
 
 /** Codes that mean "show the tape currently in the editor". */
@@ -28,7 +29,6 @@ export default function Recipient() {
   const { code } = useParams();
   const navigate = useNavigate();
   const { user, draft, findTapeByCode } = useApp();
-  const { flash } = useToast();
 
   const [opened, setOpened] = useState(false);
   const [letterOpen, setLetterOpen] = useState(false);
@@ -37,17 +37,21 @@ export default function Recipient() {
   const tape = isWorking ? null : findTapeByCode(code);
   const unresolved = !isWorking && (!tape || tape.status === 'Expired');
 
+  /* The demo and the sender's own preview read from the editor; a real share
+     code reads from the stored tape. Resolved above the early return, because
+     the player's hook has to run on every render. */
+  const view = tape || draft;
+  const stickers = view.stickers || view.placed;
+  const hasLetter = view.letter.trim().length > 0;
+
+  const player = usePlayer(view.tracks);
+
   useEffect(() => {
     if (unresolved) navigate('/expired', { replace: true });
   }, [unresolved, navigate]);
 
   /* Render nothing on the way out, rather than flashing the wrong tape. */
   if (unresolved) return null;
-
-  /* The demo and the sender's own preview read from the editor; a real share
-     code reads from the stored tape. */
-  const view = tape || draft;
-  const hasLetter = view.letter.trim().length > 0;
 
   return (
     <div className="flex flex-col items-center gap-[clamp(40px,7vw,88px)] w-full max-w-[760px] mx-auto px-[clamp(20px,5vw,40px)] pt-[clamp(32px,6vw,72px)] pb-[clamp(64px,10vw,140px)]">
@@ -64,8 +68,8 @@ export default function Recipient() {
         <Cassette
           shell={view.shell}
           label={view.title}
-          stickers={view.stickers || view.placed}
-          spinning={opened}
+          stickers={stickers}
+          spinning={opened && player.playing}
         />
       </div>
 
@@ -85,6 +89,8 @@ export default function Recipient() {
 
       {opened && (
         <section className="w-full flex flex-col gap-[18px] animate-rise-slower">
+          <MusicPlayer player={player} shell={view.shell} stickers={stickers} />
+
           <div className="flex items-center gap-3">
             <span className="text-[12px] tracking-[0.18em] uppercase text-ink-faint font-medium whitespace-nowrap">
               Side A
@@ -94,7 +100,9 @@ export default function Recipient() {
           <TrackList
             tracks={view.tracks}
             variant="reader"
-            onPlay={() => flash('Playback arrives with the backend.')}
+            onPlay={(t) => player.playTrackId(t.id)}
+            activeTrackId={player.track?.id}
+            playing={player.playing}
           />
         </section>
       )}
