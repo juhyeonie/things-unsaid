@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
@@ -20,6 +20,9 @@ const renderAt = (path) =>
   );
 
 /** Signs in through the form, the way a visitor would. */
+/** The player region, so queries do not collide with the tracklist below it. */
+const player = () => screen.getByRole('region', { name: 'Now playing' });
+
 const logIn = async () => {
   fireEvent.change(screen.getByLabelText('Email'), {
     target: { value: 'wren@somewhere.com' },
@@ -71,7 +74,29 @@ describe('the demo tape', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open the mixtape' }));
 
     expect(await screen.findByText('Side A')).toBeTruthy();
-    expect(screen.getByText('About You')).toBeTruthy();
+    /* The duration is unique to the row; the player shows it as "-5:26". */
+    expect(screen.getByText('5:26')).toBeTruthy();
+  });
+
+  it('loads the first song into the player, paused', async () => {
+    renderAt('/m/demo');
+    fireEvent.click(await screen.findByRole('button', { name: 'Open the mixtape' }));
+    await screen.findByText('Side A');
+
+    const panel = within(player());
+    expect(panel.getByText('About You')).toBeTruthy();
+    expect(panel.getByText('The 1975')).toBeTruthy();
+    expect(panel.getByText('Paused')).toBeTruthy();
+    expect(panel.getByText('0:00')).toBeTruthy();
+    expect(panel.getByText('-5:26')).toBeTruthy();
+  });
+
+  it('is honest that nothing is actually playing yet', async () => {
+    renderAt('/m/demo');
+    fireEvent.click(await screen.findByRole('button', { name: 'Open the mixtape' }));
+    expect(
+      await screen.findByText('Silent for now — the songs arrive with the backend.'),
+    ).toBeTruthy();
   });
 
   /* Regression: an unwritten letter used to be filled in with placeholder
@@ -91,13 +116,31 @@ describe('the demo tape', () => {
     expect(await screen.findByRole('button', { name: 'Make one back' })).toBeTruthy();
   });
 
-  /* Regression: the play controls were enabled buttons with no handler. */
-  it('says so when playback is pressed', async () => {
+  /* Regression: the play controls were enabled buttons with no handler. They
+     now drive the player. */
+  it('starts the tape when a song is pressed in the list', async () => {
     renderAt('/m/demo');
     fireEvent.click(await screen.findByRole('button', { name: 'Open the mixtape' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Play About You' }));
+    await screen.findByText('Side A');
 
-    expect(await screen.findByText('Playback arrives with the backend.')).toBeTruthy();
+    expect(within(player()).getByText('Paused')).toBeTruthy();
+
+    const rows = screen.getAllByRole('button', { name: 'Play About You' });
+    fireEvent.click(rows[rows.length - 1]);
+
+    expect(await within(player()).findByText('Playing')).toBeTruthy();
+  });
+
+  it('a song chosen from the list becomes the one in the player', async () => {
+    renderAt('/m/demo');
+    fireEvent.click(await screen.findByRole('button', { name: 'Open the mixtape' }));
+    await screen.findByText('Side A');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play Dreams' }));
+
+    const panel = within(player());
+    expect(await panel.findByText('Dreams')).toBeTruthy();
+    expect(panel.getByText('The Cranberries')).toBeTruthy();
   });
 });
 
@@ -112,7 +155,7 @@ describe('a tape opened from the dashboard', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open the mixtape' }));
 
     await screen.findByText('Side A');
-    expect(screen.getByText('Nightswimming')).toBeTruthy();
+    expect(within(player()).getByText('Nightswimming')).toBeTruthy();
     expect(screen.queryByText(/You said the drive was too long/)).toBeNull();
 
     fireEvent.click(screen.getByText("there's a letter too"));

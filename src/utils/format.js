@@ -34,3 +34,26 @@ const PLACEHOLDER_LETTER =
 
 export const previewLetterText = (letter) =>
   letter.trim().length ? letter : PLACEHOLDER_LETTER;
+
+/* ------------------------------------------------------------------ *
+ * Playback clock. Track lengths arrive as "4:17" strings; the player
+ * needs them as seconds, and needs them back again for its readout.
+ * ------------------------------------------------------------------ */
+
+/** "4:17" -> 257. Anything unparseable is treated as a zero-length track. */
+export const parseLength = (len) => {
+  const parts = String(len ?? '').split(':').map(Number);
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return 0;
+  const [minutes, seconds] = parts;
+  return minutes * 60 + seconds;
+};
+
+/** 257 -> "4:17". Negative values clamp to zero rather than reading "-0:01". */
+export const formatTime = (seconds) => {
+  const total = Math.max(0, Math.floor(seconds || 0));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+};
+
+/** What is left, written the way a player writes it. */
+export const formatRemaining = (elapsed, duration) =>
+  `-${formatTime(Math.max(0, duration - elapsed))}`;

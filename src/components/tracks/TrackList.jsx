@@ -5,6 +5,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   CloseIcon,
+  PauseIcon,
   PlayIcon,
 } from '../ui/Icons.jsx';
 
@@ -21,7 +22,7 @@ const ICON_BTN = 'w-11 h-11 min-h-[44px] p-0 flex-none rounded-[10px]';
  *   compact  — the last look and the share screen, read only
  *   reader   — what the recipient sees, with a play control
  */
-function TrackRow({ track, index, variant, onMove, onRemove, onPlay }) {
+function TrackRow({ track, index, variant, onMove, onRemove, onPlay, active, playing }) {
   const isReader = variant === 'reader';
   const isCompact = variant === 'compact';
 
@@ -31,7 +32,12 @@ function TrackRow({ track, index, variant, onMove, onRemove, onPlay }) {
         isReader ? READER_ROW : cx(ROW, variant === 'editable' && 'hover:bg-paper')
       }
     >
-      <span className="text-[12px] font-mono text-ink-faint w-[22px] flex-none">
+      <span
+        className={cx(
+          'text-[12px] font-mono w-[22px] flex-none',
+          active ? 'text-accent' : 'text-ink-faint',
+        )}
+      >
         {trackNo(index)}
       </span>
 
@@ -45,6 +51,7 @@ function TrackRow({ track, index, variant, onMove, onRemove, onPlay }) {
           className={cx(
             'font-medium overflow-hidden text-ellipsis whitespace-nowrap',
             isReader ? 'text-[17px]' : isCompact ? 'text-[15px]' : 'text-[16px]',
+            active && 'text-accent',
           )}
         >
           {track.title}
@@ -94,17 +101,27 @@ function TrackRow({ track, index, variant, onMove, onRemove, onPlay }) {
         <Button
           variant="secondary"
           className={ICON_BTN}
-          aria-label={`Play ${track.title}`}
+          aria-label={
+            active && playing ? `Pause ${track.title}` : `Play ${track.title}`
+          }
           onClick={() => onPlay?.(track)}
         >
-          <PlayIcon />
+          {active && playing ? <PauseIcon /> : <PlayIcon />}
         </Button>
       )}
     </div>
   );
 }
 
-export default function TrackList({ tracks, variant = 'compact', onMove, onRemove, onPlay }) {
+export default function TrackList({
+  tracks,
+  variant = 'compact',
+  onMove,
+  onRemove,
+  onPlay,
+  activeTrackId,
+  playing = false,
+}) {
   const isReader = variant === 'reader';
 
   return (
@@ -118,6 +135,8 @@ export default function TrackList({ tracks, variant = 'compact', onMove, onRemov
           onMove={onMove}
           onRemove={onRemove}
           onPlay={onPlay}
+          active={track.id === activeTrackId}
+          playing={playing}
         />
       ))}
     </div>
